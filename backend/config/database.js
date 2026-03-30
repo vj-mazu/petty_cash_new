@@ -79,6 +79,15 @@ if (process.env.DATABASE_URL) {
   try {
     const dbUrl = new URL(process.env.DATABASE_URL);
     
+    // Helper to safely decode URI components (handles raw % characters)
+    const safeDecode = (str) => {
+      try {
+        return decodeURIComponent(str);
+      } catch (e) {
+        return str;
+      }
+    };
+    
     // Safety check for empty path (missing database name)
     const databaseName = dbUrl.pathname.length > 1 ? dbUrl.pathname.substring(1) : (process.env.DB_NAME || 'cash_management');
 
