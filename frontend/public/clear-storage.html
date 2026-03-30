@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Browser Storage - Petty Cash</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: #3b82f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 8px;
+        }
+        .btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #6b7280;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        .status {
+            margin-top: 1rem;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">₹</div>
+        <h1>Clear Browser Storage</h1>
+        <p>
+            This will clear all stored login data, tokens, and cached information from your browser.
+            You'll need to log in again after this action.
+        </p>
+        
+        <button class="btn" onclick="clearStorage()">
+            🗑️ Clear All Data
+        </button>
+        
+        <button class="btn btn-secondary" onclick="goToApp()">
+            ← Back to App
+        </button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        function clearStorage() {
+            try {
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear sessionStorage
+                sessionStorage.clear();
+                
+                // Clear cookies (if any)
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
+                // Show success message
+                document.getElementById('status').innerHTML = `
+                    <div class="status success">
+                        ✅ All browser storage cleared successfully!<br>
+                        You can now test with a completely fresh start.
+                    </div>
+                `;
+                
+                // Redirect to login after 2 seconds
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+                
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <div class="status warning">
+                        ⚠️ Error clearing storage: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function goToApp() {
+            window.location.href = '/';
+        }
+        
+        // Show current storage status
+        window.onload = function() {
+            const hasToken = localStorage.getItem('token');
+            const hasUser = localStorage.getItem('user');
+            
+            if (hasToken || hasUser) {
+                document.getElementById('status').innerHTML = `
+                    <div class="status warning">
+                        ⚠️ Found stored login data. Click "Clear All Data" to remove it.
+                    </div>
+                `;
+            } else {
+                document.getElementById('status').innerHTML = `
+                    <div class="status success">
+                        ✅ No stored data found. Browser storage is already clean.
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "compression": "^1.8.1",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "node-cache": "^5.1.2"
+  },
+  "scripts": {
+    "build": "cd backend && npm install",
+    "start": "cd backend && node start.js"
+  }
+}

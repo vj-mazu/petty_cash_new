@@ -1,0 +1,258 @@
+@tailwind base;
+@import './styles/globalResponsive.css';
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 text-base rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 shadow-sm hover:shadow-md active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 text-base rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 border border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 dark:border-gray-600 dark:focus:ring-offset-gray-800 shadow-sm hover:shadow-md active:scale-[0.98];
+  }
+
+  .btn-danger {
+    @apply bg-danger-600 hover:bg-danger-700 text-white font-semibold py-3 px-6 text-base rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-danger-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 shadow-sm hover:shadow-md active:scale-[0.98];
+  }
+
+  .input-field {
+    @apply block w-full px-4 py-3 text-base border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-500;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  .table-row {
+    @apply border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150 dark:border-gray-700 dark:hover:bg-gray-700/50;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-success-100 text-success-800;
+  }
+
+  .badge-danger {
+    @apply badge bg-danger-100 text-danger-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-100 text-warning-800;
+  }
+
+  .badge-info {
+    @apply badge bg-primary-100 text-primary-800;
+  }
+}
+
+/* ===== RESPONSIVE GLOBAL CSS ===== */
+
+/* ===== BASE TABLE TEXT SIZE BOOST ===== */
+/* Increase table text from text-xs (0.75rem) to text-sm/text-base baseline */
+table th {
+  font-size: 0.9375rem !important; /* 15px - between text-sm and text-base */
+  line-height: 1.375rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+table td {
+  font-size: 0.875rem !important; /* 14px - text-sm */
+  line-height: 1.25rem !important;
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+/* Grid-based table rows (Ledgers page uses grid cols) */
+[class*="grid-cols-12"] > div {
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+}
+
+/* Page title/heading boost for data pages */
+.text-xl {
+  font-size: 1.375rem !important;
+  line-height: 1.75rem !important;
+}
+
+/* Filter label and small text boost */
+label.text-xs,
+span.text-xs,
+div.text-xs {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+
+/* Compact layout for all screens */
+.space-y-6>*+* {
+  margin-top: 0.75rem !important;
+}
+
+.space-y-3>*+* {
+  margin-top: 0.5rem !important;
+}
+
+/* Responsive page headers */
+@media (max-width: 768px) {
+
+  /* Reduce all gradient headers on mobile */
+  .bg-gradient-to-r {
+    padding: 0.75rem !important;
+  }
+
+  .bg-gradient-to-r h1 {
+    font-size: 1rem !important;
+  }
+
+  .bg-gradient-to-r p {
+    font-size: 0.65rem !important;
+  }
+
+  /* Compact tables on mobile */
+  table th,
+  table td {
+    padding: 0.25rem 0.375rem !important;
+    font-size: 0.625rem !important;
+  }
+
+  /* Make buttons smaller on mobile */
+  .bg-gradient-to-r button {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.625rem !important;
+  }
+
+  /* Stack header items vertically on mobile */
+  .bg-gradient-to-r .flex {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* Make main content use full width */
+  main {
+    padding: 0.5rem !important;
+  }
+
+  /* Responsive form inputs on mobile */
+  input,
+  select,
+  textarea {
+    font-size: 1rem !important;
+    padding: 0.625rem 0.75rem !important;
+  }
+
+  /* Sidebar width adjustment */
+  .lg\:w-64 {
+    width: 14rem !important;
+  }
+}
+
+/* Desktop: ensure tables scroll horizontally */
+@media (min-width: 769px) {
+  table {
+    width: 100%;
+    table-layout: auto;
+  }
+
+  /* Slightly compact desktop tables */
+  .border-collapse th,
+  .border-collapse td {
+    white-space: nowrap;
+  }
+}
+
+/* Ensure table wrappers scroll */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Scrollbar styling */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* Print styling */
+@media print {
+  .bg-gradient-to-r {
+    display: none !important;
+  }
+
+  table {
+    font-size: 10px !important;
+  }
+
+  table th,
+  table td {
+    padding: 2px 4px !important;
+  }
+}
+
+/* VAJJRA shimmer animation - slow continuous color-shifting */
+@keyframes vajjra-shine {
+  0% {
+    background-position: 0% center;
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    background-position: 200% center;
+    filter: hue-rotate(360deg);
+  }
+}
+
+.vajjra-shine {
+  background: linear-gradient(
+    90deg,
+    #d4a017 0%,
+    #f5d442 15%,
+    #fffbe6 30%,
+    #e879f9 45%,
+    #60a5fa 60%,
+    #34d399 75%,
+    #f5d442 90%,
+    #d4a017 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: vajjra-shine 12s linear infinite;
+}

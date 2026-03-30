@@ -1,0 +1,73 @@
+{
+  "name": "petti-cash-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
+    "axios": "^1.11.0",
+    "cross-env": "^10.1.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.12",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.7",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.542.0",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^10.3.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-hook-form": "^7.62.0",
+    "react-router-dom": "^7.8.2",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
+    "recharts": "^3.1.2",
+    "typescript": "^5.9.3",
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0",
+    "yup": "^1.7.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "cross-env CI=false react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.28.0",
+    "@types/bonjour": "^3.5.13",
+    "@types/connect-history-api-fallback": "^1.5.4",
+    "@types/eslint": "^8.56.12",
+    "@types/estree": "^1.0.8",
+    "@types/json-schema": "^7.0.15",
+    "@types/json5": "^0.0.29",
+    "@types/node": "^24.3.1",
+    "@types/prettier": "^2.7.3",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/stack-utils": "^2.0.3",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}

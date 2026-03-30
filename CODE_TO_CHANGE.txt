@@ -1,0 +1,87 @@
+// ========================================================================
+// FILE: backend/controllers/transactionController.js
+// FIX: Remove delete restrictions (TWO CHANGES NEEDED!)
+// 
+// CLIENT ERROR: "Failed to delete transaction" (Still failing!)
+// Date: 06 Jul 2025 (101 days old)
+// Ledger: Maruthi Company
+//
+// NEED TO FIX BOTH:
+//   1. 30-day restriction (Lines 981-994)
+//   2. Ledger active check (Line 961)
+// ========================================================================
+
+// ========================================================================
+// CHANGE #1: Remove Ledger Active Check (Line 961)
+// ========================================================================
+
+// ❌ FIND THIS (Lines 957-963):
+// --------------------------------------------------------
+
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: Ledger,
+          as: 'ledger',
+          where: { isActive: true },
+          attributes: ['id', 'name', 'currentBalance', 'ledgerType']
+        },
+
+
+// ✅ CHANGE TO THIS:
+// --------------------------------------------------------
+
+    const transaction = await Transaction.findByPk(id, {
+      include: [
+        {
+          model: Ledger,
+          as: 'ledger',
+          // ✅ REMOVED: where: { isActive: true }
+          attributes: ['id', 'name', 'currentBalance', 'ledgerType', 'isActive']
+        },
+
+
+// WHAT TO DO:
+// 1. Go to line 961
+// 2. Delete entire line: where: { isActive: true },
+// 3. Add 'isActive' at end of attributes line
+
+
+// ========================================================================
+// CHANGE #2: Remove 30-Day Restriction (Lines 981-994)
+// ========================================================================
+
+// ❌ FIND AND DELETE THESE LINES (Lines 981-994):
+// --------------------------------------------------------
+
+    // Check if transaction is too old to delete (business rule)
+    const transactionDate = new Date(transaction.date);
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    if (transactionDate < thirtyDaysAgo) {
+      await t.rollback();
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot delete transactions older than 30 days',
+        errors: [{ field: 'date', message: 'Transaction is too old to be deleted' }]
+      });
+    }
+
+
+// ✅ REPLACE WITH THIS (Just 1 comment line):
+// --------------------------------------------------------
+
+    // ✅ 30-day restriction REMOVED - Can now delete transactions of any age
+
+
+// ========================================================================
+// AFTER BOTH EDITS:
+// ========================================================================
+// 1. Save file (Ctrl+S)
+// 2. Stop backend (Ctrl+C)
+// 3. Restart backend:
+//    cd backend
+//    npm start
+// 4. Test delete 06 Jul 2025 transaction - WILL WORK! ✅
+// ========================================================================

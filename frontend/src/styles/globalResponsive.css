@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Global Responsive Styles for Mobile Compatibility
+   ========================================================================== */
+
+/* Base Reset for Mobile */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Base Typography Scalability */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+    /* Slightly smaller base font on mobile */
+  }
+}
+
+/* Responsive Containers */
+.container,
+.px-4,
+.p-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (max-width: 640px) {
+
+  .container,
+  .px-4,
+  .p-4 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  /* Make cards and panels take full width on very small screens */
+  .rounded-lg,
+  .rounded-xl {
+    border-radius: 0.5rem;
+  }
+}
+
+/* ==========================================================================
+   Table Responsiveness (Crucial for Data Apps)
+   ========================================================================== */
+
+/* Ensure all table containers can scroll horizontally if needed */
+.overflow-x-auto {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scrolling on iOS */
+}
+
+/* Force tables to not shrink below their content width */
+table {
+  min-width: max-content;
+  width: 100%;
+}
+
+/* Adjust table padding for mobile */
+@media (max-width: 768px) {
+
+  th,
+  td {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Make text slightly smaller in tables on mobile */
+  .text-xs,
+  .text-sm {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+}
+
+/* ==========================================================================
+   Form Elements Responsiveness
+   ========================================================================== */
+
+/* Make inputs, selects, and buttons accessible on touch */
+input,
+select,
+button,
+textarea {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+
+  /* Ensure touch targets are at least 48px tall per Apple HIG */
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="password"],
+  input[type="email"],
+  select,
+  button {
+    min-height: 48px;
+  }
+
+  /* Header adjustments */
+  h1 {
+    font-size: 1.375rem !important;
+    line-height: 1.875rem !important;
+  }
+}
+
+/* Fix for grid layouts */
+@media (max-width: 640px) {
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Modals */
+@media (max-width: 640px) {
+
+  /* Make modals take up more screen on mobile */
+  .fixed.inset-0>div>div.bg-white {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 1rem auto !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Action Button Groups */
+@media (max-width: 640px) {
+
+  /* Target the header action buttons (Add, PDF, Excel, Closed) */
+  .bg-gradient-to-r .flex.items-center.space-x-1 {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+  }
+
+  .bg-gradient-to-r .flex.items-center.space-x-1>button {
+    margin-left: 0 !important;
+    margin-bottom: 0.25rem;
+  }
+}
