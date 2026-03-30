@@ -73,11 +73,14 @@ const runSetup = async () => {
     }
 
     // Step 3: Setup database
-    if (checkFileExists('setup-database.js')) {
+    // Skip this on Render/Production where database already exists and we lack permissions to create new ones
+    if (checkFileExists('setup-database.js') && !process.env.DATABASE_URL) {
       if (!runCommand('node setup-database.js', 'Setting up database')) {
         console.error('❌ Failed to setup database');
         process.exit(1);
       }
+    } else if (process.env.DATABASE_URL) {
+      console.log('ℹ️  Skipping raw database setup as DATABASE_URL is present (typical for Cloud/Render)\n');
     } else {
       console.log('⚠️  setup-database.js not found, skipping database setup\n');
     }

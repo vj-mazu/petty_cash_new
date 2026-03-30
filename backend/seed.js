@@ -34,4 +34,14 @@ async function seedDatabase() {
   }
 }
 
+if (require.main === module) {
+  seedDatabase().then(() => {
+    console.log('✅ Seed process finished');
+    process.exit(0);
+  }).catch(err => {
+    console.error('❌ Seed process failed:', err);
+    process.exit(1);
+  });
+}
+
 module.exports = seedDatabase;

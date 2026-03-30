@@ -77,43 +77,46 @@ let sequelize;
 
 if (process.env.DATABASE_URL) {
   try {
-    // Use modern URL class to handle special characters in connection strings
-    // Sequelize 6 uses legacy url.parse which fails on certain characters
     const dbUrl = new URL(process.env.DATABASE_URL);
     
-    // Helper to safely decode URI components (handles raw % characters)
-    const safeDecode = (str) => {
-      try {
-        return decodeURIComponent(str);
-      } catch (e) {
-        return str;
-      }
-    };
+    // Safety check for empty path (missing database name)
+    const databaseName = dbUrl.pathname.length > 1 ? dbUrl.pathname.substring(1) : (process.env.DB_NAME || 'cash_management');
 
     sequelize = new Sequelize({
-      database: dbUrl.pathname.substring(1),
-      username: safeDecode(dbUrl.username),
-      password: safeDecode(dbUrl.password),
-      host: dbUrl.hostname,
-      port: parseInt(dbUrl.port || '5432'),
-      ...sequelizeOptions
+      database: databaseName,
+      username: safeDecode(dbUrl.username) || process.env.DB_USER,
+      password: safeDecode(dbUrl.password) || process.env.DB_PASSWORD,
+      host: dbUrl.hostname || process.env.DB_HOST,
+      port: parseInt(dbUrl.port || process.env.DB_PORT || '5432'),
+      ...sequelizeOptions,
+      // Ensure family is set even if not in sequelizeOptions
+      dialectOptions: {
+        ...sequelizeOptions.dialectOptions,
+        family: 4
+      }
     });
     
-    console.log('✅ DATABASE_URL parsed successfully using modern URL constructor.');
+    console.log('✅ DATABASE_URL parsed successfully for database:', databaseName);
   } catch (error) {
     console.error('❌ Modern URL parsing failed, falling back to string initialization:', error.message);
-    sequelize = new Sequelize(process.env.DATABASE_URL, sequelizeOptions);
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+      ...sequelizeOptions,
+      dialectOptions: {
+        ...sequelizeOptions.dialectOptions,
+        family: 4
+      }
+    });
   }
 } else {
   sequelize = new Sequelize({
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
-    password: String(process.env.DB_PASSWORD),
+    password: String(process.env.DB_PASSWORD || ''),
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT || '5432'),
     ...sequelizeOptions
   });
-  console.warn('⚠️  DATABASE_URL is missing. Falling back to individual parameters (DB_HOST, etc.).');
+  console.warn('⚠️  DATABASE_URL is missing. Falling back to individual parameters.');
 }
 
 console.log('🐘 Using PostgreSQL database');

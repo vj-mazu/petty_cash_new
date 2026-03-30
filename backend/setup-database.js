@@ -81,4 +81,14 @@ const createDatabaseIfNotExists = async () => {
   }
 };
 
+if (require.main === module) {
+  createDatabaseIfNotExists().then(() => {
+    console.log('✅ Database setup finished');
+    process.exit(0);
+  }).catch(err => {
+    console.error('❌ Database setup failed:', err.message);
+    process.exit(1);
+  });
+}
+
 module.exports = { createDatabaseIfNotExists };
