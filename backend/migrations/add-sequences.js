@@ -69,3 +69,5 @@ async function addSequences() {
 }
 
 module.exports = { addSequences };
+module.exports.up = async () => addSequences();
+module.exports.down = async () => Promise.resolve();
