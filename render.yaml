@@ -3,7 +3,7 @@ services:
     name: petti-cash-backend
     env: node
     buildCommand: cd backend && npm install
-    startCommand: cd backend && node start.js
+    startCommand: cd backend && node server.js
     envVars:
       - key: NODE_ENV
         value: production
