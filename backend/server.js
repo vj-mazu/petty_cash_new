@@ -247,24 +247,17 @@ const autoSetupDatabase = async () => {
     if (userCount === 0) {
       console.log('🔧 No users found. Setting up default users...');
 
-      // Create only the admin user
-      const crypto = require('crypto');
-      const tempPassword = crypto.randomBytes(8).toString('hex');
+      // Create only the admin user with known password
+      const adminPassword = 'Manjun@1234';
       const adminUser = await User.create({
         username: 'admin',
         email: 'admin@cashmanagement.com',
-        password: tempPassword,
+        password: adminPassword,
         role: 'admin',
         isActive: true
       });
       console.log(`✅ Admin user created successfully`);
-      // Log temp password to file only, not stdout in production
-      if (process.env.NODE_ENV === 'production') {
-        logger.info(`Admin temporary password generated. Check secure logs.`);
-        logger.info(`Admin temp password: ${tempPassword}`, { security: true });
-      } else {
-        console.log(`🔑 Admin temporary password: ${tempPassword}`);
-      }
+      console.log(`🔑 Admin password: Manjun@1234`);
       console.log(`⚠️  IMPORTANT: Change this password immediately after first login!`);
 
 
@@ -314,6 +307,17 @@ const autoSetupDatabase = async () => {
 
     } else {
       console.log(`✅ Database already has ${userCount} users. Skipping auto-setup.`);
+      
+      // Ensure admin password is the known one (fixes random password from first deploy)
+      try {
+        const admin = await User.findOne({ where: { username: 'admin' } });
+        if (admin) {
+          await admin.update({ password: 'Manjun@1234' });
+          console.log('✅ Admin password verified/reset to known value');
+        }
+      } catch (pwErr) {
+        console.warn('⚠️  Could not verify admin password:', pwErr.message);
+      }
     }
 
   } catch (error) {
