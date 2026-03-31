@@ -1111,8 +1111,12 @@ const Transactions: React.FC = () => {
 
 
   // Apply show/hide filter - if not showing all, only show today's transactions
-  // BUT, if a transaction number search is active, override this filter to show all relevant transactions
-  if (!showAllTransactions && !txNumberFilter) {
+  // BUT, bypass this filter when:
+  //   - a transaction number search is active
+  //   - date range filters (startDate/endDate) are applied from the Filters page
+  //   - any other filter (ledger, type) is active
+  const hasActiveFilterFromFiltersPage = startDate || endDate || selectedLedger !== 'all' || selectedType !== 'all';
+  if (!showAllTransactions && !txNumberFilter && !hasActiveFilterFromFiltersPage) {
     filteredTransactions = filteredTransactions.filter(t => {
       const transactionDate = format(new Date(t.date), 'yyyy-MM-dd');
       return transactionDate === todayStr;
@@ -1580,8 +1584,12 @@ const Transactions: React.FC = () => {
               const sortedDates = Object.entries(transactionsByDate)
                 .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime());
 
-              // ✅ FIX: Paginate all dates to prevent DOM freezing on large filters
-              const datesToShow = sortedDates.slice((currentDatePage - 1) * datesPerPage, currentDatePage * datesPerPage);
+              // ✅ FIX: When filters are active, show ALL dates on one page
+              // When no filters, paginate 1 date per page to prevent DOM freezing
+              const hasActiveFiltersForPagination = startDate || endDate || selectedLedger !== 'all' || selectedType !== 'all' || txNumberFilter;
+              const datesToShow = hasActiveFiltersForPagination
+                ? sortedDates  // Show ALL dates when filters active
+                : sortedDates.slice((currentDatePage - 1) * datesPerPage, currentDatePage * datesPerPage);
 
               return datesToShow.map(([date, dailyTransactions]) => {
                 // Sort transactions by transaction number
@@ -1738,18 +1746,29 @@ const Transactions: React.FC = () => {
 
                     {/* Transaction Table - Inline Format */}
                     <div className="overflow-x-auto shadow-xl rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800">
-                      <table className="w-full border-collapse">
+                      <table className="w-full border-collapse" style={{ tableLayout: 'fixed' }}>
+                        <colgroup>
+                          <col style={{ width: '4%' }} />   {/* SL */}
+                          <col style={{ width: '10%' }} />  {/* DATE */}
+                          <col style={{ width: '5%' }} />   {/* TX # */}
+                          <col style={{ width: '7%' }} />   {/* TYPE */}
+                          <col style={{ width: '12%' }} />  {/* AMOUNT */}
+                          <col style={{ width: '15%' }} />  {/* LEDGER */}
+                          <col style={{ width: '30%' }} />  {/* REMARKS */}
+                          <col style={{ width: '9%' }} />   {/* STATUS */}
+                          <col style={{ width: '8%' }} />   {/* ACTIONS */}
+                        </colgroup>
                         <thead>
                           <tr className="bg-gray-200 dark:bg-gray-700">
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-10 bg-gray-100 dark:bg-gray-700 font-bold text-xs dark:text-gray-200">SL</th>
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-20 bg-blue-100 dark:bg-blue-900/30 font-bold text-xs dark:text-blue-300">DATE</th>
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-14 bg-indigo-100 dark:bg-indigo-900/30 font-bold text-xs dark:text-indigo-300">TX #</th>
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-16 bg-blue-100 dark:bg-blue-900/30 font-bold text-xs dark:text-blue-300">TYPE</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-gray-100 dark:bg-gray-700 font-bold text-xs dark:text-gray-200">SL</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-blue-100 dark:bg-blue-900/30 font-bold text-xs dark:text-blue-300">DATE</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-indigo-100 dark:bg-indigo-900/30 font-bold text-xs dark:text-indigo-300">TX #</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-blue-100 dark:bg-blue-900/30 font-bold text-xs dark:text-blue-300">TYPE</th>
                             <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-left bg-green-100 dark:bg-green-900/30 font-bold text-xs dark:text-green-300">AMOUNT</th>
                             <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-left bg-yellow-100 dark:bg-yellow-900/30 font-bold text-xs dark:text-yellow-300">LEDGER</th>
                             <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-left bg-blue-50 dark:bg-blue-900/20 font-bold text-xs dark:text-blue-300">REMARKS</th>
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-20 bg-orange-100 dark:bg-orange-900/30 font-bold text-xs dark:text-orange-300">STATUS</th>
-                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center w-24 bg-gray-200 dark:bg-gray-700 font-bold text-xs dark:text-gray-200">ACTIONS</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-orange-100 dark:bg-orange-900/30 font-bold text-xs dark:text-orange-300">STATUS</th>
+                            <th className="border border-gray-400 dark:border-gray-600 px-1.5 py-1 text-center bg-gray-200 dark:bg-gray-700 font-bold text-xs dark:text-gray-200">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1790,10 +1809,10 @@ const Transactions: React.FC = () => {
                                     )}
                                   </span>
                                 </td>
-                                <td className="border border-gray-300 dark:border-gray-600 px-1.5 py-1 text-left text-xs dark:text-gray-300">
+                                <td className="border border-gray-300 dark:border-gray-600 px-1.5 py-1 text-left text-xs dark:text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap" title={transaction.ledger?.name || '-'}>
                                   {transaction.ledger?.name || '-'}
                                 </td>
-                                <td className="border border-gray-300 dark:border-gray-600 px-1.5 py-1 text-left text-xs min-w-[80px] dark:text-gray-300">
+                                <td className="border border-gray-300 dark:border-gray-600 px-1.5 py-1 text-left text-xs dark:text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap" title={transaction.remarks || ''}>
                                   {transaction.remarks || ''}
                                 </td>
                                 <td className="border border-gray-300 dark:border-gray-600 px-1.5 py-1 text-center text-xs">
@@ -1929,8 +1948,9 @@ const Transactions: React.FC = () => {
             {(() => {
               const totalDates = Object.keys(transactionsByDate).length;
 
-              // Show pagination only when multiple dates exist
-              if (totalDates <= 1) return null;
+              // Hide date pagination when filters are active (all dates shown on one page)
+              const hasActiveFiltersForPagination = startDate || endDate || selectedLedger !== 'all' || selectedType !== 'all' || txNumberFilter;
+              if (totalDates <= 1 || hasActiveFiltersForPagination) return null;
 
               return (
                 <div className="mt-6 flex flex-col items-center space-y-3">
