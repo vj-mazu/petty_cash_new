@@ -55,6 +55,7 @@ const allowedOrigins = [
   'http://localhost:3001',
   'https://petty-cash-one.vercel.app',
   'https://petty-cash-new.vercel.app',
+  'https://pettycashdemo.vercel.app',
   ...(process.env.CLIENT_URL
     ? process.env.CLIENT_URL.split(',').map(url => url.trim().replace(/\/$/, ''))
     : [])
